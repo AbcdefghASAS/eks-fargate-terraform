@@ -10,8 +10,10 @@ variable "vpc_cidr" {
 
 variable "eks_cluster_name" {
     description = "EKSSS"
+    default = "EKSS"
 }
 
 variable "cidr_block_igw" {
-    description = " 10.0.0.128/26"
+    description = "10.0.0.128/26"
+    default = "10.0.0.128/26"
 }
