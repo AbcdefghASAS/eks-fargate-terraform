@@ -77,7 +77,7 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = var.cidr_block_igw
+    cidr_block = var.public_subnets
     gateway_id = aws_internet_gateway.ig.id
   }
   tags = {
@@ -89,7 +89,7 @@ resource "aws_route_table" "public" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.vpc.id
   route {
-    cidr_block = var.cidr_block_ng
+    cidr_block = var.private_subnets
     nat_gateway_id = aws_nat_gateway.nat.id
   }
   tags = {
