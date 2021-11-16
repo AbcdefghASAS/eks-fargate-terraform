@@ -1,18 +1,8 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = "us-east-1"
   profile = "Ajay"
 }
 
-data "aws_kms_secrets" "creds" {
-  secret {
-    name    = "db"
-    payload = file("rds-creds.yml.encrypted")
-  }
-}
-
-locals {
-  db_creds = yamldecode(data.aws_kms_secrets.creds.plaintext["db"])
-}
 
 module "network" {
   source              = "./network"
@@ -49,22 +39,6 @@ module "fargate" {
   kubernetes_namespace    = var.kubernetes_namespace
 }
 
-module "rds" {
-  source               = "./rds"
-  vpc_id               = module.network.vpc_id
-  vpc_cidr             = var.vpc_cidr
-  rds_subnet_ids       = module.network.aws_subnets_private
-  subnet_group_name    = var.rds_subnet_group_name
-  identifier           = var.rds_db_identifier
-  allocated_storage    = var.rds_storage
-  engine               = var.engine
-  engine_version       = var.engine_version
-  instance_class       = var.instance_class
-  db_name              = var.rds_db_name
-  username             = local.db_creds.username
-  password             = local.db_creds.password
-  parameter_group_name = var.rds_parameter_group_name
-}
 
 module "kubernetes" {
   source                = "./kubernetes"
