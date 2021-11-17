@@ -24,3 +24,11 @@ variable "eks_cluster_name" {
     default = "testing"
 }
 
+ variable "public_subnets" {
+ default = "10.0.0.128/26"
+ }
+ variable "private_subnets" {
+ default = "10.0.0.192/26"
+ }
+
+
