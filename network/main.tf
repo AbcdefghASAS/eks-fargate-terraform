@@ -14,38 +14,15 @@ resource "aws_vpc" "vpc" {
 data "aws_availability_zones" "all" { }
 
 #Creating Public Subnets
-resource "aws_subnet" "pub_subnet" {
-  count = length(data.aws_availability_zones.all.names)
-
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = "${var.public_subnets}"   
-  availability_zone = data.aws_availability_zones.all.names[count.index]
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "${terraform.workspace}-public-subnet-${(count.index + 1)}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}-${terraform.workspace}" = "shared"
-    "kubernetes.io/role/elb" = 1
-    Environment = terraform.workspace
-  }
-}
-
-#Creating Private Subnets
-resource "aws_subnet" "priv_subnet" {
-  count = length(data.aws_availability_zones.all.names)
-
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = "${var.private_subnets}"   
-  availability_zone = data.aws_availability_zones.all.names[count.index]
-  map_public_ip_on_launch = false
-
-  tags = {
-    Name = "${terraform.workspace}-private-subnet-${(count.index + 1)}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}-${terraform.workspace}" = "shared"
-    "kubernetes.io/role/internal-elb" = 1
-    Environment = terraform.workspace
-  }
-}
+resource "aws_subnet" "publicsubnets" {    # Creating Public Subnets
+   vpc_id     = aws_vpc.vpc.id
+   cidr_block = "${var.public_subnets}"        # CIDR block of public subnets
+ }
+# Creating Private Subnets
+ resource "aws_subnet" "privatesubnets" {
+   vpc_id     = aws_vpc.vpc.id
+   cidr_block = "${var.private_subnets}"          # CIDR block of private subnets
+ }
 
 #Creating Internet Gateway
 resource "aws_internet_gateway" "ig" {
