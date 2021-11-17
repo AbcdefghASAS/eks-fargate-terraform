@@ -1,110 +1,58 @@
-#Creating VPC
-resource "aws_vpc" "vpc" {
-  cidr_block       = var.vpc_cidr
-  instance_tenancy = "default"
-  enable_dns_hostnames = true
+ resource "aws_vpc" "Main" {                # Creating VPC here
+   cidr_block       = var.main_vpc_cidr     # Defining the CIDR block use 10.0.0.0/24 for demo
+   instance_tenancy = "default"
+ }
+ 
+ resource "aws_internet_gateway" "IGW" {    # Creating Internet Gateway
+    vpc_id =  aws_vpc.Main.id               # vpc_id will be generated after we create VPC
+ }
 
-  tags = {
-    Name = "${var.vpc_name}-${terraform.workspace}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}-${terraform.workspace}" = "shared"
-    Environment = terraform.workspace
-  }
-}
+ 
+ resource "aws_subnet" "publicsubnets" {    # Creating Public Subnets
+   vpc_id =  aws_vpc.Main.id
+   cidr_block = "${var.public_subnets}"        # CIDR block of public subnets
+ }
+                 # Creating Private Subnets
+ resource "aws_subnet" "privatesubnets" {
+   vpc_id =  aws_vpc.Main.id
+   cidr_block = "${var.private_subnets}"          # CIDR block of private subnets
+ }
+ 
+ resource "aws_route_table" "PublicRT" {    # Creating RT for Public Subnet
+    vpc_id =  aws_vpc.Main.id
+         route {
+    cidr_block = "0.0.0.0/0"               # Traffic from Public Subnet reaches Internet via Internet Gateway
+    gateway_id = aws_internet_gateway.IGW.id
+     }
+ }
 
-data "aws_availability_zones" "all" { }
+ 
+ resource "aws_route_table" "PrivateRT" {    # Creating RT for Private Subnet
+   vpc_id = aws_vpc.Main.id
+   route {
+   cidr_block = "0.0.0.0/0"             # Traffic from Private Subnet reaches Internet via NAT Gateway
+   nat_gateway_id = aws_nat_gateway.NATgw.id
+   }
+ }
+ 
 
-#Creating Public Subnets
-resource "aws_subnet" "pub_subnet" {
-  count = length(data.aws_availability_zones.all.names)
+ resource "aws_route_table_association" "PublicRTassociation" {
+    subnet_id = aws_subnet.publicsubnets.id
+    route_table_id = aws_route_table.PublicRT.id
+ }
+ 
 
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = "${var.public_subnets}"   
-  map_public_ip_on_launch = true
+ resource "aws_route_table_association" "PrivateRTassociation" {
+    subnet_id = aws_subnet.privatesubnets.id
+    route_table_id = aws_route_table.PrivateRT.id
+ }
+ resource "aws_eip" "nateIP" {
+   vpc   = true
+ }
+ 
 
-  tags = {
-    Name = "${terraform.workspace}-public-subnet-${(count.index + 1)}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}-${terraform.workspace}" = "shared"
-    "kubernetes.io/role/elb" = 1
-    Environment = terraform.workspace
-  }
-}
+ resource "aws_nat_gateway" "NATgw" {
+   allocation_id = aws_eip.nateIP.id
+   subnet_id = aws_subnet.publicsubnets.id
+ }
 
-#Creating Private Subnets
-resource "aws_subnet" "priv_subnet" {
-  count = length(data.aws_availability_zones.all.names)
-
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = "${var.private_subnets}"   
-  map_public_ip_on_launch = false
-
-  tags = {
-    Name = "${terraform.workspace}-private-subnet-${(count.index + 1)}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}-${terraform.workspace}" = "shared"
-    "kubernetes.io/role/internal-elb" = 1
-    Environment = terraform.workspace
-  }
-}
-
-#Creating Internet Gateway
-resource "aws_internet_gateway" "ig" {
-  vpc_id = aws_vpc.vpc.id
-
-  tags = {
-    Name = "eks-igw-${terraform.workspace}"
-  }
-}
-
-#Creating NAT Gateway
-resource "aws_eip" "nat_eip" {
-  tags = {
-    Name = "nat-eip-${terraform.workspace}"
-  }
-}
-
-resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.pub_subnet[0].id
-
-  tags = {
-    Name = "eks-nat-gw-${terraform.workspace}"
-  }
-  depends_on = [ aws_internet_gateway.ig ]
-}
-
-#Route Table for Public Subnets
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.ig.id
-  }
-  tags = {
-    Name = "eks-public-rt-${terraform.workspace}"
-  }
-}
-
-#Route Table for Private Subnets
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat.id
-  }
-  tags = {
-    Name = "eks-private-rt-${terraform.workspace}"
-  }
-}
-
-resource "aws_route_table_association" "public" {
-  count = length(data.aws_availability_zones.all.names)
-
-  subnet_id      = element(aws_subnet.pub_subnet.*.id, count.index)
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "private" {
-  count = length(data.aws_availability_zones.all.names)
-
-  subnet_id      = element(aws_subnet.priv_subnet.*.id, count.index)
-  route_table_id = aws_route_table.private.id
-}
