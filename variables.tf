@@ -34,5 +34,26 @@ variable "zones" {
   default = "us-east-1a"
 }
 
+variable "ng_instance_types" {
+    type = list(string)
+    default = "t2.micro"
+}
+
+variable "disk_size" {
+    default = "8"
+}
+
+variable "desired_nodes" {
+    description = "1"
+}
+
+variable "max_nodes" {
+    description = "2"
+}
+
+variable "min_nodes" {
+    description = "2"
+}
+
 
 
