@@ -37,7 +37,7 @@ resource "aws_eks_node_group" "node" {
   node_group_name = "${var.node_group_name}-${terraform.workspace}"
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = var.subnet_ids
-  instance_types  = var.instance_types
+  instance_types  = "${var.instance_types}"
   disk_size       = var.disk_size
 
   scaling_config {
