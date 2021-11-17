@@ -9,7 +9,6 @@ module "network" {
   vpc_name            = var.vpc_name
   vpc_cidr            = var.vpc_cidr
   eks_cluster_name    = var.eks_cluster_name
-  cidr_block_igw      = var.cidr_block_igw
 }
 
 module "eks_cluster" {
