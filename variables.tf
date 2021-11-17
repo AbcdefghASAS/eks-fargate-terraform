@@ -36,6 +36,7 @@ variable "zones" {
 
 variable "ng_instance_types" {
  description = "t2.micro"
+    default = ["t2.micro"]
 }
 
 variable "disk_size" {
