@@ -12,6 +12,7 @@ variable "subnet_ids" {
 }
 
 variable "instance_types" {
+    type = string
     description = "List of instance types associated with the EKS Node Group"
 }
 
