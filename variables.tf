@@ -53,6 +53,10 @@ variable "max_nodes" {
 variable "min_nodes" {
     description = "2"
 }
+variable "node_group_name" {
+    type = string
+    description = "Nodess"
+}
 
 
 
