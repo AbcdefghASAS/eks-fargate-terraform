@@ -35,8 +35,7 @@ variable "zones" {
 }
 
 variable "ng_instance_types" {
-    type = string
-    default = "t2.micro"
+ description = "t2.micro"
 }
 
 variable "disk_size" {
@@ -44,19 +43,19 @@ variable "disk_size" {
 }
 
 variable "desired_nodes" {
-    description = "1"
+    default = "1"
 }
 
 variable "max_nodes" {
-    description = "2"
+    default = "2"
 }
 
 variable "min_nodes" {
-    description = "2"
+    default = "2"
 }
 variable "node_group_name" {
     type = string
-    description = "Nodess"
+    default = "Nodess"
 }
 
 
