@@ -6,8 +6,10 @@ provider "aws" {
 
 module "network" {
   source              = "./network"
-  vpc_name            = var.vpc_name
-  vpc_cidr            = var.vpc_cidr
+  region              = var.region
+  main_vpc_cidr       = var.main_vpc_cidr
+  public_subnets      = var.public_subnets
+  private_subnets     = var.private_subnets
   eks_cluster_name    = var.eks_cluster_name
 }
 
