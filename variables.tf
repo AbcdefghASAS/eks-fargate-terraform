@@ -6,7 +6,7 @@ variable "region" {
 
 variable "vpc_name" {
     description = "Name of VPC"
-    default = 
+    default = "eksss"
 }
 
 variable "vpc_cidr" {
