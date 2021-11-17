@@ -35,6 +35,7 @@ variable "zones" {
 }
 
 variable "ng_instance_types" {
+    type = string
     default = "t2.micro"
 }
 
