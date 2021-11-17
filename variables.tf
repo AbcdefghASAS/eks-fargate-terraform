@@ -30,5 +30,9 @@ variable "eks_cluster_name" {
  variable "private_subnets" {
  default = "10.0.0.192/26"
  }
+variable "zones" {
+  default = "us-east-1a"
+}
+
 
 
