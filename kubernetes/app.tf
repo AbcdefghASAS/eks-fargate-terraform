@@ -10,7 +10,7 @@ resource "kubernetes_deployment" "deploy" {
   metadata {
     name = "${var.deployment_name}-${terraform.workspace}"
     namespace = kubernetes_namespace.namespace.metadata[0].name
-    labels = "apps"
+    labels = apps
   }
 
   spec {
