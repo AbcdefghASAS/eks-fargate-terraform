@@ -82,11 +82,7 @@ variable "deployment_replicas" {
     default = "2"
 }
 
-variable "app_labels" {
-    type = string
-    description = "List of the labels for Deployment"
-    default = "wordpress"
-}
+
 
 
 
