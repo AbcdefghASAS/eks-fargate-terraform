@@ -37,12 +37,6 @@ variable "replicas" {
     description = "Number of replicas for the Deployment"
 }
 
-variable "labels" {
-    type = string
-    description = "List of the labels for Deployment"
-}
-
-
 variable "eks_cluster_endpoint" {
     type = string
     description = "EKS Cluster Endpoint"
