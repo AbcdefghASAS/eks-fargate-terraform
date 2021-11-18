@@ -42,25 +42,6 @@ variable "labels" {
     description = "List of the labels for Deployment"
 }
 
-variable "db_address" {
-    type = string
-    description = "Database Address"
-}
-
-variable "db_user" {
-    type = string
-    description = "Database Username"
-}
-
-variable "db_pass" {
-    type = string
-    description = "Database Password"
-}
-
-variable "db_name" {
-    type = string
-    description = "Database Name"
-}
 
 variable "eks_cluster_endpoint" {
     type = string
