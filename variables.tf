@@ -44,15 +44,15 @@ variable "disk_size" {
 }
 
 variable "desired_nodes" {
-    default = "1"
+    default = "2"
 }
 
 variable "max_nodes" {
-    default = "2"
+    default = "4"
 }
 
 variable "min_nodes" {
-    default = "2"
+    default = "1"
 }
 variable "node_group_name" {
     type = string
