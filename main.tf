@@ -53,6 +53,5 @@ module "kubernetes" {
   namespace             = var.kubernetes_namespace
   deployment_name       = var.deployment_name
   replicas              = var.deployment_replicas
-  labels                = var.app_labels
   namespace_depends_on  = [ module.fargate.id , module.eks_node_group.id ]
 }
