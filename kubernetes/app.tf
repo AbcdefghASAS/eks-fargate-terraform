@@ -1,7 +1,7 @@
 resource "kubernetes_namespace" "namespace" {
   metadata {
     name = var.namespace
-    labels = var.labels
+    labels = "apps"
   }
   depends_on = [ var.namespace_depends_on ]
 }
@@ -10,19 +10,19 @@ resource "kubernetes_deployment" "deploy" {
   metadata {
     name = "${var.deployment_name}-${terraform.workspace}"
     namespace = kubernetes_namespace.namespace.metadata[0].name
-    labels = var.labels
+    labels = "apps"
   }
 
   spec {
     replicas = var.replicas
 
     selector {
-      match_labels = var.labels
+      match_labels = "apps"
     }
 
     template {
       metadata {
-        labels = var.labels
+        labels = "apps"
       }
 
       spec {
@@ -74,10 +74,10 @@ resource "kubernetes_service" "wordpress" {
     /*annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb-ip"
     }*/
-    labels = var.labels
+    labels = "apps"
   }
   spec {
-    selector = var.labels
+    selector = "apps"
     type  = "NodePort"
     port {
       port = 80
@@ -97,7 +97,7 @@ resource "kubernetes_ingress" "wordpress" {
       "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
       "alb.ingress.kubernetes.io/target-type" = "ip"
     }
-    labels = var.labels
+    labels = "apps"
   }
 
   spec {
