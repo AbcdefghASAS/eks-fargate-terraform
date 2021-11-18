@@ -37,22 +37,7 @@ resource "kubernetes_deployment" "deploy" {
               name = "wordpress-persistent-storage"
               mount_path = "/var/www/html"
           }
-          env {
-            name = "WORDPRESS_DB_HOST"
-            value = var.db_address
-          }
-          env { 
-            name = "WORDPRESS_DB_USER"
-            value = var.db_user
-          }
-          env { 
-            name = "WORDPRESS_DB_PASSWORD"
-            value = var.db_pass 
-          } 
-          env {
-            name = "WORDPRESS_DB_NAME"
-            value = var.db_name
-          }
+          
         }
         volume  {
           name = "wordpress-persistent-storage"
