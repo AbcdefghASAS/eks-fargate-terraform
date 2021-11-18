@@ -38,7 +38,7 @@ variable "replicas" {
 }
 
 variable "labels" {
-    type = map
+    type = string
     description = "List of the labels for Deployment"
 }
 
