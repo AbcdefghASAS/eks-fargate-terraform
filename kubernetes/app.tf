@@ -1,7 +1,7 @@
 resource "kubernetes_namespace" "namespace" {
   metadata {
     name = var.namespace
-    labels = "apps"
+    labels = apps
   }
   depends_on = [ var.namespace_depends_on ]
 }
@@ -17,12 +17,12 @@ resource "kubernetes_deployment" "deploy" {
     replicas = var.replicas
 
     selector {
-      match_labels = "apps"
+      match_labels = apps
     }
 
     template {
       metadata {
-        labels = "apps"
+        labels = apps
       }
 
       spec {
@@ -74,10 +74,10 @@ resource "kubernetes_service" "wordpress" {
     /*annotations = {
       "service.beta.kubernetes.io/aws-load-balancer-type" = "nlb-ip"
     }*/
-    labels = "apps"
+    labels = apps
   }
   spec {
-    selector = "apps"
+    selector = apps
     type  = "NodePort"
     port {
       port = 80
@@ -97,7 +97,7 @@ resource "kubernetes_ingress" "wordpress" {
       "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
       "alb.ingress.kubernetes.io/target-type" = "ip"
     }
-    labels = "apps"
+    labels = apps
   }
 
   spec {
