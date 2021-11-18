@@ -56,3 +56,6 @@ variable "namespace_depends_on" {
   type    = any
   default = null
 }
+variable "labels" {
+    default = "apps"
+}
