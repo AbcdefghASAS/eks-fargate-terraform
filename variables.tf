@@ -59,5 +59,17 @@ variable "node_group_name" {
     default = "Nodess"
 }
 
+variable "fargate_profile_name" {
+    type = string
+    description = "Name of the Fargate Profile"
+    default = "fgta"
+}
+
+variable "kubernetes_namespace" {
+    type = string
+    description = "Kubernetes namespace for selection"
+    default = "default"
+}
+
 
 
