@@ -70,6 +70,23 @@ variable "kubernetes_namespace" {
     description = "Kubernetes namespace for selection"
     default = "default"
 }
+variable "deployment_name" {
+    type = string
+    description = "Name of the Deployment"
+    default = "deployment"
+}
+
+variable "deployment_replicas" {
+    type = string
+    description = "Number of replicas for the Deployment"
+    default = "2"
+}
+
+variable "app_labels" {
+    type = map
+    description = "List of the labels for Deployment"
+    default = "app"
+}
 
 
 
