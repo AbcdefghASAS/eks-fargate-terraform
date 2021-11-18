@@ -83,9 +83,9 @@ variable "deployment_replicas" {
 }
 
 variable "app_labels" {
-    type = map
+    type = string
     description = "List of the labels for Deployment"
-    default = "app"
+    default = "wordpress"
 }
 
 
